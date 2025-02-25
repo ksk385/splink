@@ -11,13 +11,13 @@ At a high level, this includes:
 
 ## Settings Schema Validation
 
-Our custom settings schema can be found within [`settings_jsonschema.json`](https://github.com/moj-analytical-services/splink/blob/master/splink/files/settings_jsonschema.json).
+Our custom settings schema can be found within [`settings_jsonschema.json`](https://github.com/moj-analytical-services/splink/blob/master/splink/internals/files/settings_jsonschema.json).
 
 This is a json file, outlining the required data type, key and value(s) to be specified by the user while constructing their settings. Where values deviate from this specified schema, an error will be thrown.
 
-[Schema validation](https://github.com/moj-analytical-services/splink/blob/master/splink/validate_jsonschema.py) is currently performed inside the [settings.py](https://github.com/moj-analytical-services/splink/blob/master/splink/settings.py#L44C17-L44C17) script.
+[Schema validation](https://github.com/moj-analytical-services/splink/blob/master/splink/internals/validate_jsonschema.py) is currently performed inside the [settings.py](https://github.com/moj-analytical-services/splink/blob/master/splink/internals/settings.py#L213) script.
 
-You can modify the schema by manually editing the [json schema](https://github.com/moj-analytical-services/splink/blob/master/splink/files/settings_jsonschema.json).
+You can modify the schema by manually editing the [json schema](https://github.com/moj-analytical-services/splink/blob/master/splink/internals/files/settings_jsonschema.json).
 
 Modifications can be used to (amongst other uses):
 
@@ -35,11 +35,11 @@ Detailed information on the arguments that can be supplied to the json schema ca
 
 As long as an input is of the correct data type, it will pass our initial schema checks. This can then mean that user inputs that would generate invalid SQL can slip through and are then often caught by the database engine, [commonly resulting in uninformative errors](https://github.com/moj-analytical-services/splink/issues/1362). This can result in uninformative and confusing errors that the user is unsure of how to resolve.
 
-The settings validation code (found within the [settings validation](https://github.com/moj-analytical-services/splink/tree/master/splink/settings_validation) directory of Splink) is another layer of validation, executing a series of checks to determine whether values in the user's settings dictionary will generate invalid SQL.
+The settings validation code (found within the [settings validation](https://github.com/moj-analytical-services/splink/tree/master/splink/internals/settings_validation) directory of Splink) is another layer of validation, executing a series of checks to determine whether values in the user's settings dictionary will generate invalid SQL.
 
 Frequently encountered problems include:
 
-- **Invalid column names**. For example, specifying a [`unique_id_column_name`](https://github.com/moj-analytical-services/splink/blob/settings_validation_docs/splink/files/settings_jsonschema.json#L61) that doesn't exist in the underlying dataframe(s). Such names satisfy the schema requirements as long as they are strings.
+- **Invalid column names**. For example, specifying a [`unique_id_column_name`](https://github.com/moj-analytical-services/splink/blob/settings_validation_docs/splink/internal/files/settings_jsonschema.json#L61) that doesn't exist in the underlying dataframe(s). Such names satisfy the schema requirements as long as they are strings.
 - **Using the settings dictionary's default values**
 - **Importing comparisons and blocking rules for the wrong dialect**.
 - **Using an inappropriate custom data types** - (comparison level vs. comparison within our comparisons).
